@@ -4,6 +4,7 @@ from common.salt import saltdec, saltenc
 from common.logger import LOGGING_CONFIG
 from common.token import generate_token
 from common.service_info import GetFullSystemData
+from common.utils import is_file_or_dir
 from sql_edge import *
 from urllib import parse
 from sanic.response import text
@@ -33,7 +34,7 @@ async def token_auth(request):
                 return text("Unauthorized", status=401)
             elif token_dict[device_id] != token:
                 return text("Unauthorized", status=401)
-            
+
 
 # 手动上传操作日志模块
 @edge_app.post('/report')
@@ -46,16 +47,26 @@ async def report(request):
             if device_req.body.decode("utf-8") == "success":
                 try:
                     logger.debug('building sftp connection')
-                    transport = paramiko.Transport(cloud_host, cloud_port)
-                    transport.connect(None, username=edge_id, password=saltenc(edge_id, pwd))
+                    transport = paramiko.Transport(sftp_port, sftp_port)
+                    transport.connect(None, username=sftp_usrname, password=sftp_remote_log_pth)
                     logger.debug('sftp connection built successfully')
                 except Exception:
                     logger.debug('build sftp connection error')
                 # 尝试传输日志文件
                 try:
                     sftp = paramiko.SFTPClient.from_transport(transport)
-                    for f in os.listdir(log_path+device_id+"/"): # 遍历设备操作日志目录，将所有的logfile上传
-                        sftp.put(log_path+device_id+"/", remote_log_path+f)
+                    # 遍历设备操作日志目录，将所有的logfile上传
+                    for f in os.listdir(sftp_log_pth):
+                        if is_file_or_dir(f):
+                            sftp.put(sftp_log_pth+f, sftp_remote_log_pth+f)
+                        else:
+                            for ff in os.listdir(sftp_log_pth+f):
+                                if is_file_or_dir(ff):
+                                    sftp.put(sftp_log_pth+f+"/"+ff, sftp_remote_log_pth+f+"/"+ff)
+                                else:
+                                    for fff in os.listdir(sftp_log_pth+f+"/"+ff):
+                                        if is_file_or_dir(fff):
+                                            sftp.put(sftp_log_pth+f+"/"+ff+"/"+fff, sftp_remote_log_pth+f+"/"+ff+"/"+fff)
                     transport.close()
                 except Exception:
                     logger.debug('sftp transport process error')
@@ -74,7 +85,7 @@ async def device_control_update(device_id, action):
         elif action == "logout":
             sql_device_service_connect(device_id, False)
     except:
-        logger.fatal("sql error, location: device_control_update")
+        logger.error("sql error, location: device_control_update")
     finally:
         request = requests.post("http://{}:{}/{}".format(cloud_host, cloud_port, "device_async"), data=json(device_id, action))
         logger.debug("device_async finished")

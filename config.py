@@ -9,6 +9,15 @@ cloud_port = 81
 log_path = "./Logs/"
 remote_log_path = "./Logs/edge_" + edge_id +"/"
 
+sftp_usrname = "Extrac0n"
+sftp_pwd = "HanKangRui886"
+sftp_log_pth = "D:/Grade 3 Sec/devops_edge/Logs/"
+sftp_remote_log_pth = "D:/Grade 3 Sec/devops_centre/Logs/" + edge_id + "/"
+sftp_host = '127.0.0.1'
+sftp_port = 22
+
+
+
 globals()["ws_edge"] = None
 
 pwd = "the edge password"
