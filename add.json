@@ -1,0 +1,3 @@
+POST /device/add
+
+[{"id": "000005", "name": "npl7c","edge_id": "4773513196776456193", "status": "alive", "connection": 0, "device_host": "127.0.0.1", "device_port": "85", "device_description": "controller", "create_time": "2017-11-15 11:12:59", "last_update": "2022-01-07 03:37:04", "hardware": {"model": "x86 PC", "sn": "t2tp2fh6"}, "software": {"infrastructure": {"version": "5.6", "last_update": "2021-06-20 18:30:50"}, "business": {"version": "8.9", "last_update": "2021-11-15 11:12:59"}}, "nic": [{"type": "eth", "mac": "69:3d:71:d9:e1:58", "ipv4": "22.183.83.93"}, {"type": "wifi", "mac": "97:53:f6:ba:50:48", "ipv4": "234.227.223.46"}, {"type": "wifi", "imei": "97:53:f6:ba:50:48", "ipv4": "234.227.223.46"}]}]

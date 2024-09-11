@@ -1,0 +1,3 @@
+POST /device/add_relation
+
+{"device_id": "00006", "group_id": "1"}

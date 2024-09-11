@@ -1,0 +1,3 @@
+POST /device/cha_group_name
+
+{"group_id": "1", "group_name": "Qing Shui He Xiao Qu"}

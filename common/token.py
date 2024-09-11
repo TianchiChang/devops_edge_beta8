@@ -1,2 +1,5 @@
+import snowflake.client
+
 def generate_token():
-    return "adafawawfhiauwhfia"
+    guid = snowflake.client.get_guid()
+    return guid

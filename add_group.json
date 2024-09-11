@@ -1,0 +1,3 @@
+POST /device/add_group
+
+{"group_id": "4", "group_name": "Xin Xiao Qu"}
